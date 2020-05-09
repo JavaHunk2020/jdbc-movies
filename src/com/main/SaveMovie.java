@@ -5,20 +5,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Scanner;
+
+import com.dao.MovieDao;
+import com.dao.MovieDaoImpl;
+import com.dao.entity.MovieEntity;
 
 public class SaveMovie {
 	public static void main(String[] args) {
 		try {
-			  //Loading the driver
-			Class.forName("com.mysql.cj.jdbc.Driver");
-		
-			//Creating connection to the database
-			Connection connection=DriverManager.getConnection("jdbc:mysql://localhost:3306/movie_db","root","mysql@1234");
-			if(connection!=null)  {
-				System.out.println("Connection is created!!!!!!!!!!!");
-			}
 			
 			Scanner scanner=new Scanner(System.in);
 			System.out.println("Enter name");
@@ -35,25 +33,13 @@ public class SaveMovie {
 			System.out.println("Enter teams");
 			int teams=scanner.nextInt();
 			
-			Date date=new Date();
-			Timestamp timestamp=new Timestamp(date.getTime());
+			LocalDateTime  localDate=LocalDateTime.of(2020,07, 20,12,12,12);
+			Timestamp timestamp = Timestamp.valueOf(localDate);
 			
-			String sql="insert into movie_tbl(name,year,rating,budget,teams,createdate) values(?,?,?,?,?,?)";
-			//Compiling query and assigning into PreparedStatement object
-			PreparedStatement pstmt=connection.prepareStatement(sql);
-			
-			//setting the values inside PreparedStatement object
-			pstmt.setString(1,name);
-			pstmt.setInt(2,year);
-			pstmt.setInt(3,rating);
-			pstmt.setBigDecimal(4,new BigDecimal(budget));
-			pstmt.setInt(5,teams);
-			pstmt.setTimestamp(6,timestamp);
-			//Fire the query
-		    pstmt.execute();
-		    
+		    MovieEntity entity=new MovieEntity(0, name, year, rating, budget, teams, timestamp);
+			MovieDao movieDao=new MovieDaoImpl();
+			movieDao.save(entity);
 		    System.out.println("Ahahah data is saved into database");	
-			
 		}catch (Exception e) {
 			e.printStackTrace();
 		}

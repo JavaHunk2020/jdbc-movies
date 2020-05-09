@@ -1,15 +1,21 @@
 package com.main;
 
+import java.util.Scanner;
+
 import com.dao.MovieDao;
 import com.dao.MovieDaoImpl;
 
-public class FetchMovies {
+public class DeleteMovie {
 	public static void main(String[] args) {
 		try {
+			Scanner scanner=new Scanner(System.in);
+			System.out.println("Enter name");
+			String name=scanner.next();
 			MovieDao movieDao=new MovieDaoImpl();
-			movieDao.findAll().forEach(System.out::println);
+			movieDao.deleteByName(name);
 		}catch (Exception e) {
 			e.printStackTrace();
 		}
+		
 	}
 }
